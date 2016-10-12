@@ -17,7 +17,7 @@ describe 'gnomish::application' do
   end
 
   describe 'with defaults for all parameters' do
-  let(:params) { {} }
+    let(:params) { {} }
     it 'should fail' do
       expect { should contain_class(subject) }.to raise_error(Puppet::Error, /(when gnomish::application::ensure is set to <file> entry_categories, entry_exec, entry_icon, entry_name and entry_type needs to have valid values)/)
     end
@@ -53,8 +53,8 @@ describe 'gnomish::application' do
 
     it do
       should contain_file('desktop_app_rspec-title').with({
-        'ensure'  => 'absent',
-        'path'    => '/rspec/testing.desktop',
+        'ensure' => 'absent',
+        'path'   => '/rspec/testing.desktop',
         'notify' => 'Exec[update-desktop-database]',
       })
     end
@@ -191,7 +191,7 @@ describe 'gnomish::application' do
         :message => 'is not a string nor an array',
       },
       'string' => {
-        :name    => %w(entry_categories entry_exec entry_icon entry_name  entry_type),
+        :name    => %w(entry_categories entry_exec entry_icon entry_name entry_type),
         :valid   => ['string'],
         :invalid => [%w(array), { 'ha' => 'sh' }, 3, 2.42, true, false],
         :message => 'is not a string',
@@ -200,7 +200,7 @@ describe 'gnomish::application' do
         :name    => %w(ensure),
         :valid   => %w(absent file),
         :invalid => ['string', %w(array), { 'ha' => 'sh' }, 3, 2.42, true, false],
-        :message => 'gnomish::application::ensure is must be <file> or <absent> and is set to',
+        :message => 'gnomish::application::ensure must be <file> or <absent> and is set to',
       },
     }
 

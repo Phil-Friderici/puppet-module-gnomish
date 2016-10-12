@@ -1,3 +1,5 @@
+# == Define: gnomish::gnome::gconftool_2
+#
 define gnomish::gnome::gconftool_2 (
   $value,
   $config = 'defaults',

@@ -1,3 +1,5 @@
+# == Define: gnomish::application
+#
 define gnomish::application (
   # desktop file resource attributes:
   $ensure           = 'file',
@@ -15,7 +17,7 @@ define gnomish::application (
 
   # <Variable validation>
   validate_absolute_path($path)
-  validate_re($ensure,'^(absent|file)$', "gnomish::application::ensure is must be <file> or <absent> and is set to ${ensure}.")
+  validate_re($ensure,'^(absent|file)$', "gnomish::application::ensure must be <file> or <absent> and is set to ${ensure}.")
 
   # validate mandatory application settings only when needed
   if $ensure == 'file' {

@@ -1,3 +1,5 @@
+# == Define: gnomish::mate::mateconftool_2
+#
 define gnomish::mate::mateconftool_2 (
   $value,
   $config = 'defaults',
