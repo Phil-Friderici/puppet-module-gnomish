@@ -10,6 +10,13 @@ describe 'gnomish' do
     it { should contain_class('gnomish::gnome') }
     it { should have_package_resource_count(0) }
     it { should have_gnomish__application_resource_count(0) }
+    it do
+      should contain_exec('update-desktop-database').with({
+        'command'     => '/usr/bin/update-desktop-database',
+        'path'        => '/spec/test:/path',
+        'refreshonly' => 'true',
+      })
+    end
     it { should have_gnomish__gnome__gconftool_2_resource_count(0) }
     it { should have_gnomish__mate__mateconftool_2_resource_count(0) }
   end

@@ -10,6 +10,7 @@ define gnomish::application (
   $entry_name       = $title,
   $entry_terminal   = false,
   $entry_type       = 'Application',
+  $entry_mimetype   = undef,
 ) {
 
   # <Variable validation>
@@ -27,6 +28,14 @@ define gnomish::application (
     if is_string($entry_name)       == false { fail('gnomish::application::entry_name is not a string.') }
     if is_string($entry_type)       == false { fail('gnomish::application::entry_type is not a string.') }
 
+    case type3x($entry_mimetype) {
+      undef:    { $entry_mimetype_string = undef }
+      'string': { $entry_mimetype_string = $entry_mimetype }
+      'array':  { $entry_mimetype_string = join($entry_mimetype, ';') }
+      default:  { fail('gnomish::application::entry_mimetype is not a string nor an array.') }
+    }
+
+    # check if mandatory metadata is given
     if $entry_categories == undef or $entry_categories == '' {
       fail('when gnomish::application::ensure is set to <file> entry_categories, entry_exec, entry_icon, entry_name and entry_type needs to have valid values.')
     }
@@ -57,8 +66,11 @@ define gnomish::application (
     $_name       = [ "Name=${entry_name}" ]
     $_terminal   = [ "Terminal=${entry_terminal}" ]
     $_type       = [ "Type=${entry_type}" ]
-
-    $entry_lines_real = union($_categories, $_exec, $_icon, $_name, $_terminal, $_type, $entry_lines)
+    $_mimetype   = $entry_mimetype_string ? {
+      undef   => [],
+      default => [ "MimeType=${entry_mimetype_string}" ],
+    }
+    $entry_lines_real = union($_categories, $_exec, $_icon, $_name, $_terminal, $_type, $_mimetype, $entry_lines)
   }
   else {
     $entry_lines_real = []
@@ -70,6 +82,7 @@ define gnomish::application (
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
+    notify  => Exec['update-desktop-database'],
     content => template('gnomish/application.erb'),
   }
 }
