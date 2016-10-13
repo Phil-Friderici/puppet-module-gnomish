@@ -198,12 +198,12 @@ on at the [application defined type](#defined-type-gnomishapplication).
 ```yaml
 gnomish::gnome::applications:
   'mc':
-    ensure:         'file'
-    entry_category: 'System;FileManager;'
-    entry_exec:     'mc'
-    entry_icon:     'mc'
-    entry_name:     'Midnight Commander'
-    entry_terminal: false
+    ensure:           'file'
+    entry_categories: 'System;FileManager;'
+    entry_exec:       'mc'
+    entry_icon:       'mc'
+    entry_name:       'Midnight Commander'
+    entry_terminal:   false
 
 gnomish::gnome::applications:
   'gnome-network-properties':
@@ -291,12 +291,12 @@ on at the [application defined type](#defined-type-gnomishapplication).
 ```yaml
 gnomish::mate::applications:
   'mc':
-    ensure:         'file'
-    entry_category: 'System;FileManager;'
-    entry_exec:     'mc'
-    entry_icon:     'mc'
-    entry_name:     'Midnight Commander'
-    entry_terminal: false
+    ensure:           'file'
+    entry_categories: 'System;FileManager;'
+    entry_exec:       'mc'
+    entry_icon:       'mc'
+    entry_name:       'Midnight Commander'
+    entry_terminal:   false
 
 gnomish::mate::applications:
   'mate-network-properties':
@@ -359,12 +359,12 @@ Instead of calling this define directly, it is recommended to specify `$gnomish:
 ```yaml
 gnomish::applications:
   'mc':
-    ensure:         'file'
-    entry_category: 'System;FileManager;'
-    entry_exec:     'mc'
-    entry_icon:     'mc'
-    entry_name:     'Midnight Commander'
-    entry_terminal: false
+    ensure:           'file'
+    entry_categories: 'System;FileManager;'
+    entry_exec:       'mc'
+    entry_icon:       'mc'
+    entry_name:       'Midnight Commander'
+    entry_terminal:   false
 
 gnomish::gnome::applications:
   'gnome-network-properties':
@@ -383,7 +383,7 @@ Gnome it will remove the icon for gnome-network-properties and only on Mate the 
 #### ensure (string / optional)
 This setting can be used to add or remove application icons. Valid values are *file* and *absent*. Use the default of *file* to
 add/manage them or set it to *absent* to remove them. If set to *absent* `$entry_categories`, `$entry_exec` and `$entry_icon` become
-and unused and optional.
+unused and optional.
 
 - Default: ***'file'***
 
