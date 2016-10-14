@@ -352,6 +352,9 @@ The minimum set of entries for application icons (Name, Icon, Exec, Categories, 
 parameters. All others entries can be managed as an array of free text lines via the `$entry_lines` parameter. The module will ensure
 that there are no duplicate entries and fail if found one.
 
+When applications get added or removed, it will call update-desktop-database. This will update the cache database of MIME types handled
+by desktop files.
+
 Instead of calling this define directly, it is recommended to specify `$gnomish::applications`, `$gnomish::gnome::applications` or
 `$gnomish::mate::applications` from hiera as a hash of group resources. create_resources will create resources out of your hash.
 
@@ -443,6 +446,12 @@ Specify the application icons Terminal entry. Valid values are *false* and *true
 Specify the application icons Type entry.
 
 - Default: ***'Application'***
+
+---
+#### entry_mimetype (string or array / optional)
+Specify the mime types supported by the application.
+
+- Default: ***undef***
 
 ---
 ## Defined type `gnomish::gnome::gconftool_2`

@@ -8,9 +8,16 @@ describe 'gnomish::application' do
   let(:title) { 'rspec-title' }
   let(:facts) { mandatory_global_facts }
   let(:params) { mandatory_params }
+  let(:pre_condition) do
+    "exec { 'update-desktop-database':
+       command     => '/usr/bin/update-desktop-database',
+       path        => $::path,
+       refreshonly => true,
+     }"
+  end
 
   describe 'with defaults for all parameters' do
-  let(:params) { {} }
+    let(:params) { {} }
     it 'should fail' do
       expect { should contain_class(subject) }.to raise_error(Puppet::Error, /(when gnomish::application::ensure is set to <file> entry_categories, entry_exec, entry_icon, entry_name and entry_type needs to have valid values)/)
     end
@@ -23,6 +30,7 @@ describe 'gnomish::application' do
       should contain_file('desktop_app_rspec-title').with({
         'ensure'  => 'absent',
         'path'    => '/usr/share/applications/rspec-title.desktop',
+        'notify' => 'Exec[update-desktop-database]',
       })
     end
   end
@@ -45,8 +53,9 @@ describe 'gnomish::application' do
 
     it do
       should contain_file('desktop_app_rspec-title').with({
-        'ensure'  => 'absent',
-        'path'    => '/rspec/testing.desktop',
+        'ensure' => 'absent',
+        'path'   => '/rspec/testing.desktop',
+        'notify' => 'Exec[update-desktop-database]',
       })
     end
   end
@@ -96,6 +105,7 @@ describe 'gnomish::application' do
         'owner'   => 'root',
         'group'   => 'root',
         'mode'    => '0644',
+        'notify'  => 'Exec[update-desktop-database]',
         'content' => content_minimum,
       })
     end
@@ -112,6 +122,18 @@ describe 'gnomish::application' do
       let(:params) { mandatory_params.merge({ :entry_terminal => true }) }
 
       it { should contain_file('desktop_app_rspec-title').with_content(/^Terminal=true$/) }
+    end
+
+    context 'when entry_mimetype is set to valid string <application/spec.test>' do
+      let(:params) { mandatory_params.merge({ :entry_mimetype => 'application/spec.test' }) }
+
+      it { should contain_file('desktop_app_rspec-title').with_content(%r{^MimeType=application\/spec.test$}) }
+    end
+
+    context 'when entry_mimetype is set to valid array [ <application/spec.test>, <application/rspec.test> ]' do
+      let(:params) { mandatory_params.merge({ :entry_mimetype => ['application/spec.test', 'application/rspec.test'] }) }
+
+      it { should contain_file('desktop_app_rspec-title').with_content(%r{^MimeType=application\/spec.test;application\/rspec.test$}) }
     end
 
     context 'when entry_lines is set to valid array %w(Comment=example1 Encoding=UTF-8)' do
@@ -162,8 +184,14 @@ describe 'gnomish::application' do
         :invalid => ['true', 'false', 'string', %w(array), { 'ha' => 'sh' }, 3, 2.42, nil],
         :message => '(is not a boolean|Unknown type of boolean given)',
       },
+      'string / array' => {
+        :name    => %w(entry_mimetype),
+        :valid   => ['string', %w(array)],
+        :invalid => [{ 'ha' => 'sh' }, 3, 2.42, true, false],
+        :message => 'is not a string nor an array',
+      },
       'string' => {
-        :name    => %w(entry_categories entry_exec entry_icon entry_name  entry_type),
+        :name    => %w(entry_categories entry_exec entry_icon entry_name entry_type),
         :valid   => ['string'],
         :invalid => [%w(array), { 'ha' => 'sh' }, 3, 2.42, true, false],
         :message => 'is not a string',
@@ -172,7 +200,7 @@ describe 'gnomish::application' do
         :name    => %w(ensure),
         :valid   => %w(absent file),
         :invalid => ['string', %w(array), { 'ha' => 'sh' }, 3, 2.42, true, false],
-        :message => 'gnomish::application::ensure is must be <file> or <absent> and is set to',
+        :message => 'gnomish::application::ensure must be <file> or <absent> and is set to',
       },
     }
 
