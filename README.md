@@ -518,6 +518,7 @@ to one of the other valid values of *bool*, *int*, *float* or *string*.
 ---
 # Changelog
 
+* 1.1.1 Support Puppet up to 4.9
 * 1.1.0 Feature requests:
   * Add explicit support for MimeType(s) in application metadata
   * Use $::path in exec resources
