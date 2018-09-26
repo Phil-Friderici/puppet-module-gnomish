@@ -7,9 +7,16 @@ describe 'gnomish::mate' do
   describe 'with defaults for all parameters' do
     it { should compile.with_all_deps }
     it { should contain_class('gnomish::mate') }
-    it { should have_resource_count(0) }
+    it { should have_resource_count(1) }
     it { should have_gnomish__application_resource_count(0) }
     it { should have_gnomish__mate__mateconftool_2_resource_count(0) }
+    it do
+      should contain_exec('update-desktop-database').with({
+        'command'     => '/usr/bin/update-desktop-database',
+        'path'        => '/spec/test:/path',
+        'refreshonly' => 'true',
+      })
+    end
   end
 
   describe 'with applications set to valid hash' do
