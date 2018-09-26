@@ -87,12 +87,6 @@ class gnomish (
   include "::gnomish::${desktop}"
   create_resources('gnomish::application', $applications_real)
 
-  exec { 'update-desktop-database' :
-    command     => '/usr/bin/update-desktop-database',
-    path        => $::path,
-    refreshonly => true, # notified by gnomish::application file {"desktop_app_${title}"}
-  }
-
   $settings_xml_real = merge($settings_xml_wallpaper,  $settings_xml_hiera)
   create_resources("gnomish::${desktop}::${conftool}", $settings_xml_real)
 

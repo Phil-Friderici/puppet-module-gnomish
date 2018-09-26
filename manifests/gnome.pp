@@ -52,6 +52,12 @@ class gnomish::gnome (
     }
   }
 
+  exec { 'update-desktop-database' :
+    command     => '/usr/bin/update-desktop-database',
+    path        => $::path,
+    refreshonly => true, # notified by gnomish::application file {"desktop_app_${title}"}
+  }
+
   create_resources('gnomish::application', $applications_real)
   create_resources('gnomish::gnome::gconftool_2', $settings_xml_real)
 }
