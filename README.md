@@ -518,6 +518,8 @@ to one of the other valid values of *bool*, *int*, *float* or *string*.
 ---
 # Changelog
 
+* 1.2.1 Support Puppet 6
+* 1.2.0 Support Puppet 5
 * 1.1.1 Support Puppet up to 4.9
 * 1.1.0 Feature requests:
   * Add explicit support for MimeType(s) in application metadata
