@@ -4,7 +4,6 @@ describe 'gnomish::gnome::gconftool_2' do
     :value => 'value'
   }
   let(:title) { '/gnomish/rspec' }
-  let(:facts) { mandatory_global_facts }
   let(:params) { mandatory_params }
 
   describe 'with defaults for all parameters' do

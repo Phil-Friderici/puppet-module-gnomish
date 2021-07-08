@@ -1,9 +1,5 @@
 require 'spec_helper'
 describe 'gnomish::gnome' do
-  mandatory_params = {}
-  let(:facts) { mandatory_global_facts }
-  let(:params) { mandatory_params }
-
   describe 'with defaults for all parameters' do
     it { should compile.with_all_deps }
     it { should contain_class('gnomish::gnome') }
@@ -20,17 +16,16 @@ describe 'gnomish::gnome' do
   end
 
   describe 'with applications set to valid hash' do
-    let(:applications_hash) do
-      mandatory_params.merge({
-        :applications => {
-          'from_param' => {
-            'ensure'           => 'file',
-            'entry_categories' => 'from_param',
-            'entry_exec'       => 'exec',
-            'entry_icon'       => 'icon',
-          }
+    let(:applications_hash) do {
+      :applications => {
+        'from_param' => {
+          'ensure'           => 'file',
+          'entry_categories' => 'from_param',
+          'entry_exec'       => 'exec',
+          'entry_icon'       => 'icon',
         }
-      })
+      }
+    }
     end
 
     context 'when applications_hiera_merge set to <true> (default)' do
@@ -54,14 +49,13 @@ describe 'gnomish::gnome' do
   end
 
   describe 'with settings_xml set to valid hash' do
-    let(:settings_xml_hash) do
-      mandatory_params.merge({
-       :settings_xml => {
-          'from_param' => {
-            'value' => 'from_param',
-          }
+    let(:settings_xml_hash) do {
+     :settings_xml => {
+        'from_param' => {
+          'value' => 'from_param',
         }
-      })
+      }
+    }
     end
 
     context 'when settings_xml_hiera_merge set to <true> (default)' do
@@ -82,7 +76,7 @@ describe 'gnomish::gnome' do
   end
 
   describe 'with system_items_modify set to valid boolean <true>' do
-    let(:params) { mandatory_params.merge({ :system_items_modify => true }) }
+    let(:params) { { :system_items_modify => true } }
     it do
       should contain_file('modified system items').with({
         'ensure' => 'file',
@@ -95,22 +89,20 @@ describe 'gnomish::gnome' do
     end
 
     context 'when system_items_path is set to valid </rspec/system-items.xbel>' do
-      let(:params) do
-        mandatory_params.merge({
-          :system_items_modify => true,
-          :system_items_path   => '/rspec/system-items.xbel',
-        })
+      let(:params) do {
+        :system_items_modify => true,
+        :system_items_path   => '/rspec/system-items.xbel',
+      }
       end
 
       it { should contain_file('modified system items').with_path('/rspec/system-items.xbel') }
     end
 
     context 'when system_items_source is set to valid <puppet:///modules/gnomish/rspec.xbel.erb>' do
-      let(:params) do
-        mandatory_params.merge({
-          :system_items_modify => true,
-          :system_items_source => 'puppet:///modules/gnomish/rspec.xbel.erb',
-        })
+      let(:params) do {
+        :system_items_modify => true,
+        :system_items_source => 'puppet:///modules/gnomish/rspec.xbel.erb',
+      }
       end
 
       it { should contain_file('modified system items').with_source('puppet:///modules/gnomish/rspec.xbel.erb') }
@@ -118,11 +110,10 @@ describe 'gnomish::gnome' do
   end
 
   describe 'with hiera providing data from multiple levels' do
-    let(:facts) do
-      mandatory_global_facts.merge({
-        :fqdn  => 'gnomish.example.local',
-        :class => 'gnomish',
-      })
+    let(:facts) do {
+      :fqdn  => 'gnomish.example.local',
+      :class => 'gnomish',
+    }
     end
 
     context 'with defaults for all parameters' do
@@ -136,14 +127,14 @@ describe 'gnomish::gnome' do
     end
 
     context 'with applications_hiera_merge set to valid <false>' do
-      let(:params) { mandatory_params.merge({ :applications_hiera_merge => false }) }
+      let(:params) { { :applications_hiera_merge => false } }
 
       it { should have_gnomish__application_resource_count(1) }
       it { should contain_gnomish__application('from_hiera_fqdn_gnome_specific') }
     end
 
     context 'with settings_xml_hiera_merge set to valid <false>' do
-      let(:params) { mandatory_params.merge({ :settings_xml_hiera_merge => false }) }
+      let(:params) { { :settings_xml_hiera_merge => false } }
 
       it { should have_gnomish__gnome__gconftool_2_resource_count(1) }
       it { should contain_gnomish__gnome__gconftool_2('from_hiera_fqdn_gnome_specific') }
@@ -184,14 +175,14 @@ describe 'gnomish::gnome' do
         var[:params] = {} if var[:params].nil?
         var[:valid].each do |valid|
           context "when #{var_name} (#{type}) is set to valid #{valid} (as #{valid.class})" do
-            let(:params) { [mandatory_params, var[:params], { :"#{var_name}" => valid, }].reduce(:merge) }
+            let(:params) { [ var[:params], { :"#{var_name}" => valid, }].reduce(:merge) }
             it { should compile }
           end
         end
 
         var[:invalid].each do |invalid|
           context "when #{var_name} (#{type}) is set to invalid #{invalid} (as #{invalid.class})" do
-            let(:params) { [mandatory_params, var[:params], { :"#{var_name}" => invalid, }].reduce(:merge) }
+            let(:params) { [ var[:params], { :"#{var_name}" => invalid, }].reduce(:merge) }
             it 'should fail' do
               expect { should contain_class(subject) }.to raise_error(Puppet::Error, /#{var[:message]}/)
             end

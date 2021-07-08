@@ -6,7 +6,6 @@ describe 'gnomish::application' do
     :entry_icon       => 'icon',
   }
   let(:title) { 'rspec-title' }
-  let(:facts) { mandatory_global_facts }
   let(:params) { mandatory_params }
   let(:pre_condition) do
     "exec { 'update-desktop-database':
